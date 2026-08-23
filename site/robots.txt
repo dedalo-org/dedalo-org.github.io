@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Only the sitemap at the domain root is read, so it has to name every site
+# under it — a robots.txt inside a project's pages is never fetched.
+Sitemap: https://dedalo-org.github.io/sitemap.xml
+Sitemap: https://dedalo-org.github.io/dedalo/sitemap.xml

@@ -1,0 +1,63 @@
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    timeout-minutes: 10
+    name: check and assemble
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+
+      - name: Check the site
+        run: |
+          set -euo pipefail
+          # Structure, CSS balance, metadata and every internal link, resolved
+          # against the tree about to be published. `/dedalo/` is a different
+          # deployment on the same domain, so it is declared rather than
+          # resolved here.
+          scripts/check-site.py --root site --built site --base-path "" --external-prefix /dedalo/
+
+      - name: Assemble
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          cp -r site/. _site/
+          # Pages must not run Jekyll over the tree.
+          touch _site/.nojekyll
+          test -f _site/index.html
+          test -f _site/404.html
+          test -f _site/robots.txt
+          test -f _site/sitemap.xml
+
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: _site
+
+  deploy:
+    timeout-minutes: 10
+    name: deploy to github pages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
