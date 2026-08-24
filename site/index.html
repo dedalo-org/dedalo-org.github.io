@@ -353,8 +353,8 @@
 
 <div class="ticker" aria-hidden="true">
   <div class="track">
-    <i class="hi">● system status: pre-release</i><i class="warn">on-chain broadcast: not live</i><i>dedalo holds no signing key</i><i>ledger: hash-chained</i><i class="hi">contract: 10 conditions proved</i><i>money: integers only</i><i>msrv 1.85.0 verified</i><i>licence mit</i>
-    <i class="hi">● system status: pre-release</i><i class="warn">on-chain broadcast: not live</i><i>dedalo holds no signing key</i><i>ledger: hash-chained</i><i class="hi">contract: 10 conditions proved</i><i>money: integers only</i><i>msrv 1.85.0 verified</i><i>licence mit</i>
+    <i class="hi">● system status: pre-release</i><i class="warn">on-chain broadcast: not live</i><i>dedalo holds no signing key</i><i>ledger: hash-chained</i><i class="hi">vault: a test per refusal</i><i>money: integers only</i><i>msrv 1.90.0 verified</i><i>licence mit</i>
+    <i class="hi">● system status: pre-release</i><i class="warn">on-chain broadcast: not live</i><i>dedalo holds no signing key</i><i>ledger: hash-chained</i><i class="hi">vault: a test per refusal</i><i>money: integers only</i><i>msrv 1.90.0 verified</i><i>licence mit</i>
   </div>
 </div>
 
@@ -375,8 +375,9 @@
     <a href="#split" class="hide-sm">split</a>
     <a href="#guarantees" class="hide-sm">guarantees</a>
     <a href="#install">install</a>
+    <a href="#docs" class="hide-sm">docs</a>
     <a href="#projects" class="hide-sm">projects</a>
-    <a href="/dedalo/api/">docs</a>
+    <a href="/dedalo/">handbook</a>
     <a href="https://github.com/dedalo-org/dedalo">source</a>
   </nav>
 </header>
@@ -394,7 +395,7 @@
     </p>
     <div class="cta">
       <a class="btn primary" href="#install">get started</a>
-      <a class="btn" href="/dedalo/api/">api reference</a>
+      <a class="btn" href="/dedalo/">read the handbook</a>
       <a class="btn" href="https://github.com/dedalo-org/dedalo">source</a>
     </div>
 
@@ -585,8 +586,44 @@ cargo binstall dedalo</pre>
     </div>
   </section>
 
+  <section id="docs" class="wrap" aria-labelledby="d-title">
+    <span class="tag"><b>05</b> · documentation</span>
+    <h2 id="d-title">Read before you trust it</h2>
+    <p class="sub">
+      Two places, and the split is deliberate. The handbook is written; the API
+      reference is generated per released version, so it matches the crate you
+      installed rather than whatever <code>main</code> looked like this morning.
+    </p>
+    <div class="tabs">
+      <div class="panel">
+        <div class="panel-bar"><span class="led on"></span>&nbsp;handbook</div>
+<pre><a href="/dedalo/getting-started/quickstart.html">quickstart</a>          <span class="c">a round in ten minutes</span>
+<a href="/dedalo/concepts/money.html">money</a>              <span class="c">integers, and what is proved</span>
+<a href="/dedalo/reference/configuration.html">dedalo.toml</a>        <span class="c">every key, every default</span>
+<a href="/dedalo/trust/verification.html">verification</a>       <span class="c">proved vs. merely tested</span>
+<a href="/dedalo/trust/threat-model.html">threat model</a>       <span class="c">who could make it pay wrong</span>
+<a href="/dedalo/operating/auditing.html">auditing</a>           <span class="c">check a project yourself</span></pre>
+      </div>
+      <div class="panel">
+        <div class="panel-bar"><span class="led on"></span>&nbsp;api reference</div>
+<pre><span class="c"># signatures and types, per release</span>
+<a href="https://docs.rs/dedalo">docs.rs/dedalo</a>
+
+<span class="c"># the library, without the CLI</span>
+[dependencies]
+dedalo = { version = "0.1",
+           default-features = false }</pre>
+      </div>
+    </div>
+    <div class="cta" style="margin-top:1.2rem">
+      <a class="btn primary" href="/dedalo/">the handbook</a>
+      <a class="btn" href="https://docs.rs/dedalo">api reference</a>
+      <a class="btn" href="https://github.com/orgs/dedalo-org/discussions">ask a question</a>
+    </div>
+  </section>
+
   <section id="status" class="wrap" aria-labelledby="s-title">
-    <span class="tag"><b>05</b> · status</span>
+    <span class="tag"><b>06</b> · status</span>
     <h2 id="s-title">Project status</h2>
     <div class="warnbox">
       <h3>⚠ on-chain broadcasting is not live yet</h3>
@@ -599,9 +636,10 @@ cargo binstall dedalo</pre>
         Dedalo holds no signing key. A round is deposited once against a Merkle
         root and contributors claim; <code>dedalo propose</code> prints the exact
         transactions, with their calldata, and people execute them from a
-        multisig. The claim contract exists and its arithmetic is proved by
-        solc&rsquo;s model checker — but it is <strong>unaudited and
-        undeployed</strong>, so nothing has moved a coin.
+        multisig. The vault&rsquo;s rules are pure Rust with a test per way it
+        refuses, and the deployable is an Arbitrum Stylus binding around them —
+        but it is <strong>unaudited and undeployed</strong>, so nothing has
+        moved a coin.
       </p>
     </div>
     <ul class="check">
@@ -617,7 +655,7 @@ cargo binstall dedalo</pre>
   </section>
 
   <section id="projects" class="wrap" aria-labelledby="p-title">
-    <span class="tag"><b>06</b> · projects</span>
+    <span class="tag"><b>07</b> · projects</span>
     <h2 id="p-title">What else is here</h2>
     <p class="sub">
       Everything in the organisation is open source and MIT licensed.
@@ -629,7 +667,7 @@ cargo binstall dedalo</pre>
 the hash-chained ledger, the claim contract,
 and the CLI and GitHub Action that drive them.
 
-<span class="c">rust · <a href="/dedalo/api/">api reference</a> · <a href="https://github.com/dedalo-org/dedalo">source</a></span></pre>
+<span class="c">rust · <a href="/dedalo/">handbook</a> · <a href="https://docs.rs/dedalo">api</a> · <a href="https://github.com/dedalo-org/dedalo">source</a></span></pre>
       </div>
       <div class="panel">
         <div class="panel-bar"><span class="led"></span>&nbsp;dedalo-nvim</div>
@@ -647,7 +685,7 @@ from the same history a payout comes from.
   </section>
 
   <section id="contribute" class="wrap" aria-labelledby="c-title">
-    <span class="tag"><b>07</b> · contribute</span>
+    <span class="tag"><b>08</b> · contribute</span>
     <h2 id="c-title">Contributing pays</h2>
     <p class="sub">
       Dedalo is open source, MIT licensed, and built by the community. If you
@@ -675,7 +713,8 @@ from the same history a payout comes from.
   <div class="wrap foot">
     <span>mit licensed</span>
     <a href="https://github.com/dedalo-org/dedalo">github</a>
-    <a href="/dedalo/api/">api reference</a>
+    <a href="/dedalo/">handbook</a>
+    <a href="https://docs.rs/dedalo">api reference</a>
     <a href="https://crates.io/crates/dedalo">crates.io</a>
     <a href="https://github.com/orgs/dedalo-org/discussions">discussions</a>
     <a href="https://github.com/dedalo-org/dedalo/blob/main/CHANGELOG.md">changelog</a>
