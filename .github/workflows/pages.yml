@@ -3,6 +3,10 @@ name: Pages
 on:
   push:
     branches: [main]
+  # The site is checked before it is merged, not after. `main` requires this
+  # job to pass, and a required check that only runs on push would never
+  # report on a pull request — which blocks every merge forever.
+  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -50,6 +54,9 @@ jobs:
   deploy:
     timeout-minutes: 10
     name: deploy to github pages
+    # Only from `main`. A pull request builds and checks the site; publishing
+    # it is what merging is for.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     permissions:
