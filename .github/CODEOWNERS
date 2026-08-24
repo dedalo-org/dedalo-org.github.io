@@ -1,0 +1,8 @@
+# Any change needs a maintainer's eyes. The `main` ruleset does not require a
+# code owner's review on this repository — one maintainer reviewing their own
+# pull request is a formality, not a control — but ownership is still worth
+# stating, so a future second maintainer inherits it rather than invents it.
+*                                   @4137314
+
+# Anything that runs with a token.
+/.github/workflows/                 @4137314
