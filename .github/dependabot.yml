@@ -1,0 +1,13 @@
+# Third-party actions in this repository are pinned to a commit, with the tag
+# as a trailing comment. A pinned action never updates on its own, which is the
+# point — so something has to propose the updates, and this is it.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      # One pull request for routine bumps keeps the review queue readable.
+      github-actions:
+        patterns: ["*"]
