@@ -385,10 +385,10 @@
 <main id="main">
 
   <div class="wrap hero">
-    <span class="tag"><b>◆</b> merge-to-earn · rust · git-native</span>
+    <span class="tag"><b>◆</b> merge-to-earn · rust · git-native · solana</span>
     <h1>Turn code merges into<br>sustainable open-source funding<span class="cursor"></span></h1>
     <p class="lede">
-      Dedalo reads merge history straight from your repository, scores who
+      Dedalo reads the changes that landed in your repository, scores who
       contributed what, and distributes a funding round to contributor wallets —
       taking a protocol fee that flows to the network's Open Collective, so
       <b>the network funds itself</b> instead of depending on grants.
@@ -445,9 +445,9 @@ demo-collective  <span class="g">protocol</span>     0x33333333333…   2.50%   
         <g>
           <rect class="box" x="5"   y="58" width="190" height="92"/>
           <text class="box-num"   x="21"  y="82">01 · GIT</text>
-          <text class="box-title" x="21"  y="106">Read the merges</text>
-          <text class="box-note"  x="21"  y="126">merge commits, their</text>
-          <text class="box-note"  x="21"  y="139">commits, their diffs</text>
+          <text class="box-title" x="21"  y="106">Read what landed</text>
+          <text class="box-note"  x="21"  y="126">merges or squashes,</text>
+          <text class="box-note"  x="21"  y="139">their commits, their diffs</text>
         </g>
         <g>
           <rect class="box" x="245" y="58" width="190" height="92"/>
@@ -635,11 +635,11 @@ dedalo = { version = "0.1",
       <p>
         Dedalo holds no signing key. A round is deposited once against a Merkle
         root and contributors claim; <code>dedalo propose</code> prints the exact
-        transactions, with their calldata, and people execute them from a
-        multisig. The vault&rsquo;s rules are pure Rust with a test per way it
-        refuses, and the deployable is an Arbitrum Stylus binding around them —
-        but it is <strong>unaudited and undeployed</strong>, so nothing has
-        moved a coin.
+        instructions, with their data <em>and their accounts</em>, and people
+        execute them from a multisig. The vault&rsquo;s rules are pure Rust with
+        a test per way it refuses — but the Solana program that would enforce
+        them is <strong>unwritten, unaudited and undeployed</strong>, so nothing
+        has moved a coin.
       </p>
     </div>
     <ul class="check">
