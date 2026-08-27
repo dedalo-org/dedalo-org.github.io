@@ -9,14 +9,14 @@
 <meta property="og:description" content="Turn code merges into sustainable open-source funding.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dedalo-org.github.io/">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cstyle%3Epath%2Crect%7Bstroke%3A%2314170f%3Bfill%3Anone%3Bstroke-width%3A3.6%3Bstroke-linecap%3Asquare%7Drect%7Bfill%3A%2314170f%3Bstroke%3Anone%7D%40media%28prefers-color-scheme%3Adark%29%7Bpath%7Bstroke%3A%237dff9b%7Drect%7Bfill%3A%237dff9b%7D%7D%3C%2Fstyle%3E%3Cpath%20d%3D%22M18.20%202.40H29.60V29.60H2.40V2.40H13.80%22%2F%3E%3Cpath%20d%3D%22M18.20%2021.73H21.73V10.27H10.27V21.73H13.80%22%2F%3E%3Crect%20x%3D%2214.20%22%20y%3D%2214.20%22%20width%3D%223.60%22%20height%3D%223.60%22%2F%3E%3C%2Fsvg%3E">
 <!-- The page is entirely self-contained: no scripts, no external requests.
      Every moving part below is CSS or SVG. Saying so explicitly means a
      future edit that adds a script fails loudly instead of quietly. -->
 <meta http-equiv="Content-Security-Policy"
       content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; form-action 'none'; base-uri 'none'; frame-ancestors 'none'">
-<meta name="theme-color" content="#0b0d0b" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#f2f1ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0c0a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f3ec" media="(prefers-color-scheme: light)">
 <link rel="canonical" href="https://dedalo-org.github.io/">
 <style>
   /* ===================================================================
@@ -24,47 +24,99 @@
      hairline rules, and a palette narrow enough to stay legible at 2am.
      =================================================================== */
 
+  /* Every value below was measured against its background with the WCAG
+     relative-luminance formula, not chosen by eye. Text tokens clear 4.5:1 and
+     `--line-hot`, which draws interactive boundaries, clears 3:1. `--line` is
+     a decorative hairline between sections and is deliberately below that —
+     WCAG 1.4.11 covers components that carry information, and a divider does
+     not. `scripts/check-contrast.py` re-measures all of it. */
   :root {
     color-scheme: dark light;
 
-    --bg:        #0b0d0b;
-    --bg-alt:    #10130f;
-    --bg-raised: #14180f;
-    --line:      #26301f;
-    --line-hot:  #3d5230;
+    --bg:        #0a0c0a;
+    --bg-alt:    #0f120e;
+    --bg-raised: #141810;
+    --line:      #232c1e;
+    --line-hot:  #4e6642;
 
-    --fg:        #d4e0c8;
-    --fg-dim:    #7f8f72;
-    --fg-faint:  #4d5a44;
+    --fg:        #dbe6d0;
+    --fg-dim:    #93a385;
+    --fg-faint:  #727f66;
 
     --green:     #7dff9b;
-    --amber:     #ffc255;
-    --cyan:      #6fe6ff;
-    --magenta:   #ff86c8;
+    --amber:     #ffcb6b;
+    --cyan:      #79dcf2;
+    --rose:      #ff9fb4;
     --on-accent: #06120a;
 
     --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", "Cascadia Mono", Menlo, Consolas, monospace;
     --gap: clamp(2.5rem, 6vw, 4.5rem);
   }
 
+  /* The three theme states, in the order they must override each other.
+
+     There is no JavaScript here and there is not going to be: the page's CSP
+     says `default-src 'none'`, and a script would fail loudly rather than
+     quietly. So the switch is three radio buttons and `:has()` — a selector
+     of specificity (1,0,1), which beats both `:root` and anything a media
+     query can say, in either direction. */
   @media (prefers-color-scheme: light) {
-    :root {
-      --bg:        #f2f1ea;
-      --bg-alt:    #eae9df;
+    :root { --bg: #f4f3ec; }
+    :root:not(:has(#theme-dark:checked)) {
+      --bg:        #f4f3ec;
+      --bg-alt:    #eceadf;
       --bg-raised: #ffffff;
-      --line:      #d2d0c2;
-      --line-hot:  #a8a493;
+      --line:      #dcdacc;
+      --line-hot:  #8f8b78;
 
-      --fg:        #14170f;
-      --fg-dim:    #55604a;
-      --fg-faint:  #8b9481;
+      --fg:        #12150e;
+      --fg-dim:    #4e5844;
+      --fg-faint:  #67715c;
 
-      --green:     #10743f;
-      --amber:     #8a5a06;
-      --cyan:      #0d6b80;
-      --magenta:   #a32e6e;
+      --green:     #0e6b3a;
+      --amber:     #7d5205;
+      --cyan:      #0b6076;
+      --rose:      #a52c52;
       --on-accent: #ffffff;
     }
+  }
+
+  html:has(#theme-light:checked) {
+    color-scheme: light;
+    --bg:        #f4f3ec;
+    --bg-alt:    #eceadf;
+    --bg-raised: #ffffff;
+    --line:      #dcdacc;
+    --line-hot:  #8f8b78;
+
+    --fg:        #12150e;
+    --fg-dim:    #4e5844;
+    --fg-faint:  #67715c;
+
+    --green:     #0e6b3a;
+    --amber:     #7d5205;
+    --cyan:      #0b6076;
+    --rose:      #a52c52;
+    --on-accent: #ffffff;
+  }
+
+  html:has(#theme-dark:checked) {
+    color-scheme: dark;
+    --bg:        #0a0c0a;
+    --bg-alt:    #0f120e;
+    --bg-raised: #141810;
+    --line:      #232c1e;
+    --line-hot:  #4e6642;
+
+    --fg:        #dbe6d0;
+    --fg-dim:    #93a385;
+    --fg-faint:  #727f66;
+
+    --green:     #7dff9b;
+    --amber:     #ffcb6b;
+    --cyan:      #79dcf2;
+    --rose:      #ff9fb4;
+    --on-accent: #06120a;
   }
 
   * { box-sizing: border-box; }
@@ -96,6 +148,115 @@
   .wrap { width: min(100% - 2rem, 68rem); margin-inline: auto; }
 
   :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+
+  /* Visible to a screen reader, gone from the page. Not `display:none`,
+     which would take it out of the accessibility tree as well. */
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0; border: 0;
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .theme {
+    display: flex;
+    gap: 0;
+    margin: 0 0 0 auto;
+    padding: 0;
+    border: 1px solid var(--line-hot);
+    background: var(--bg-alt);
+  }
+
+  /* The radios stay in the tab order and stay focusable — they are simply
+     drawn by their labels. `appearance:none` with zero size, rather than
+     `display:none`, which would make the control unreachable by keyboard. */
+  .theme input {
+    appearance: none;
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: 0;
+    opacity: 0;
+  }
+
+  .theme label {
+    padding: 0.18rem 0.5rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--fg-dim);
+    cursor: pointer;
+    border-right: 1px solid var(--line);
+    user-select: none;
+  }
+  .theme label:last-of-type { border-right: 0; }
+  .theme label:hover { color: var(--fg); }
+
+  .theme input:checked + label {
+    background: var(--green);
+    color: var(--on-accent);
+  }
+
+  /* Focus follows the radio, but the radio is invisible — so the ring is
+     drawn on the label that stands in for it. */
+  .theme input:focus-visible + label {
+    outline: 2px solid var(--cyan);
+    outline-offset: -2px;
+  }
+
+  /* Anything that moves for more than five seconds needs a way out, and the
+     smooth scroll goes with it: a person who asked their system for less
+     motion has asked for this too. */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* ── the funding ladder ──────────────────────────────────────────────
+     A project's lifetime raised crosses two thresholds and what it may do
+     changes. Drawn rather than tabulated because the shape of it — one way,
+     no going back — is the thing worth saying, and a table cannot say it. */
+  .ladder { width: 100%; height: auto; }
+
+  .rung-track { fill: none; stroke: var(--line-hot); stroke-width: 2; }
+
+  .rung-fill {
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 4;
+    stroke-linecap: square;
+    stroke-dasharray: 560;
+    stroke-dashoffset: 560;
+    animation: fill 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+  @keyframes fill {
+    0%        { stroke-dashoffset: 560; }
+    18%, 30%  { stroke-dashoffset: 373; }
+    48%, 60%  { stroke-dashoffset: 187; }
+    78%, 100% { stroke-dashoffset: 0; }
+  }
+
+  .rung-node { fill: var(--bg); stroke: var(--line-hot); stroke-width: 2; }
+  .rung-node.lit { animation: lit 5s steps(1) infinite; }
+  .rung-node.lit-2 { animation-delay: 0s; }
+  .rung-node.lit-3 { animation-delay: 0s; }
+  @keyframes lit {
+    0%, 17%   { stroke: var(--line-hot); }
+    18%, 100% { stroke: var(--green); }
+  }
+  .rung-node.lit-3 { animation-name: lit3; }
+  @keyframes lit3 {
+    0%, 47%   { stroke: var(--line-hot); }
+    48%, 100% { stroke: var(--green); }
+  }
+
+  .rung-label { fill: var(--fg); font: 600 13px/1 var(--mono); }
+  .rung-note  { fill: var(--fg-dim); font: 400 11px/1 var(--mono); }
+  .rung-mark  { fill: var(--amber); font: 600 11px/1 var(--mono); }
 
   .skip {
     position: absolute; left: -9999px; top: 0; z-index: 100;
@@ -217,7 +378,7 @@
   .term .p { color: var(--cyan); }
   .term .g { color: var(--green); }
   .term .w { color: var(--amber); }
-  .term .m { color: var(--magenta); }
+  .term .m { color: var(--rose); }
 
   /* ================= sections ======================================== */
   section { padding: var(--gap) 0; border-top: 1px solid var(--line); }
@@ -373,12 +534,28 @@
     </div>
     <a href="#how">how</a>
     <a href="#split" class="hide-sm">split</a>
+    <a href="#ladder" class="hide-sm">lifecycle</a>
     <a href="#guarantees" class="hide-sm">guarantees</a>
     <a href="#install">install</a>
     <a href="#docs" class="hide-sm">docs</a>
     <a href="#projects" class="hide-sm">projects</a>
     <a href="/dedalo/">handbook</a>
     <a href="https://github.com/dedalo-org/dedalo">source</a>
+
+    <!-- Three radios rather than a toggle, because the honest default is not
+         a third colour scheme but "whatever this machine already decided".
+         Radios are keyboard-operable and announced as a group for free; a
+         `div` with a click handler would be neither, and there is no
+         JavaScript here to give it one. -->
+    <fieldset class="theme">
+      <legend class="sr-only">Colour theme</legend>
+      <input type="radio" name="theme" id="theme-system" checked>
+      <label for="theme-system" title="Follow this device">auto</label>
+      <input type="radio" name="theme" id="theme-light">
+      <label for="theme-light" title="Always light">day</label>
+      <input type="radio" name="theme" id="theme-dark">
+      <label for="theme-dark" title="Always dark">night</label>
+    </fieldset>
   </nav>
 </header>
 
@@ -515,8 +692,47 @@ demo-collective  <span class="g">protocol</span>     0x33333333333…   2.50%   
     </div>
   </section>
 
+  <section id="ladder" class="wrap" aria-labelledby="l-title">
+    <span class="tag"><b>03</b> · lifecycle</span>
+    <h2 id="l-title">And what a project becomes</h2>
+    <p class="sub">Funding accumulates. Crossing a threshold you set changes what the project is allowed to do — and the ladder only goes up.</p>
+
+    <svg class="ladder" viewBox="0 0 920 190" role="img"
+         aria-label="A project moves through three stages as its lifetime funding grows. Raising: rounds pay contributors. Above the staking threshold: a share of the reserve may be staked. Above the token threshold: the project may mint a token whose trading fees are split four ways — back into the reserve, into the stake, to roles, and to contributors. A project that sets no thresholds stays in the first stage, which is a valid way to use the tool.">
+      <line class="rung-track" x1="60" y1="70" x2="860" y2="70"/>
+      <path class="rung-fill" d="M60 70H860"/>
+
+      <circle class="rung-node" cx="60"  cy="70" r="9"/>
+      <circle class="rung-node lit lit-2" cx="380" cy="70" r="9"/>
+      <circle class="rung-node lit lit-3" cx="700" cy="70" r="9"/>
+
+      <text class="rung-label" x="60"  y="110">raising</text>
+      <text class="rung-note"  x="60"  y="130">rounds pay contributors</text>
+      <text class="rung-note"  x="60"  y="146">reserve accumulates</text>
+
+      <text class="rung-mark"  x="380" y="50">stake_threshold</text>
+      <text class="rung-label" x="380" y="110">staked</text>
+      <text class="rung-note"  x="380" y="130">a share of the reserve earns</text>
+      <text class="rung-note"  x="380" y="146">yield returns to the reserve</text>
+
+      <text class="rung-mark"  x="700" y="50">token_threshold</text>
+      <text class="rung-label" x="700" y="110">tokenised</text>
+      <text class="rung-note"  x="700" y="130">trading fees split four ways</text>
+      <text class="rung-note"  x="700" y="146">40 reserve / 20 stake</text>
+      <text class="rung-note"  x="700" y="162">10 roles / 30 contributors</text>
+    </svg>
+
+    <p class="sub" style="margin-top:1.5rem">
+      Thresholds are configuration, not constants — a project that names none
+      stays in the first stage, which is a perfectly good way to use this. The
+      rules are ordinary Rust and proved rather than promised: raising more
+      never lowers the stage, and the four slices sum to exactly what was
+      harvested. <b>None of it is wired to a chain yet.</b>
+    </p>
+  </section>
+
   <section id="guarantees" class="wrap" aria-labelledby="g-title">
-    <span class="tag"><b>03</b> · invariants</span>
+    <span class="tag"><b>04</b> · invariants</span>
     <h2 id="g-title">What the code guarantees</h2>
     <p class="sub">
       Not claims — gates. Each of these is held down by property tests that
@@ -551,7 +767,7 @@ demo-collective  <span class="g">protocol</span>     0x33333333333…   2.50%   
   </section>
 
   <section id="install" class="wrap" aria-labelledby="i-title">
-    <span class="tag"><b>04</b> · install</span>
+    <span class="tag"><b>05</b> · install</span>
     <h2 id="i-title">Install</h2>
     <p class="sub">
       Every archive ships a SHA-256 checksum and signed build provenance. The
@@ -587,7 +803,7 @@ cargo binstall dedalo</pre>
   </section>
 
   <section id="docs" class="wrap" aria-labelledby="d-title">
-    <span class="tag"><b>05</b> · documentation</span>
+    <span class="tag"><b>06</b> · documentation</span>
     <h2 id="d-title">Read before you trust it</h2>
     <p class="sub">
       Two places, and the split is deliberate. The handbook is written; the API
@@ -623,7 +839,7 @@ dedalo = { version = "0.1",
   </section>
 
   <section id="status" class="wrap" aria-labelledby="s-title">
-    <span class="tag"><b>06</b> · status</span>
+    <span class="tag"><b>07</b> · status</span>
     <h2 id="s-title">Project status</h2>
     <div class="warnbox">
       <h3>⚠ on-chain broadcasting is not live yet</h3>
@@ -655,7 +871,7 @@ dedalo = { version = "0.1",
   </section>
 
   <section id="projects" class="wrap" aria-labelledby="p-title">
-    <span class="tag"><b>07</b> · projects</span>
+    <span class="tag"><b>08</b> · projects</span>
     <h2 id="p-title">What else is here</h2>
     <p class="sub">
       Everything in the organisation is open source and MIT licensed.
@@ -685,7 +901,7 @@ from the same history a payout comes from.
   </section>
 
   <section id="contribute" class="wrap" aria-labelledby="c-title">
-    <span class="tag"><b>08</b> · contribute</span>
+    <span class="tag"><b>09</b> · contribute</span>
     <h2 id="c-title">Contributing pays</h2>
     <p class="sub">
       Dedalo is open source, MIT licensed, and built by the community. If you
