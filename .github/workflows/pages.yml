@@ -8,6 +8,11 @@ on:
   # report on a pull request — which blocks every merge forever.
   pull_request:
   workflow_dispatch:
+  # The status section is rendered from dedalo's changelog, which changes in
+  # another repository and cannot push here. A rebuild every morning is what
+  # makes "generated from the changelog" true rather than "generated once".
+  schedule:
+    - cron: "17 6 * * *"
 
 concurrency:
   group: pages
@@ -43,7 +48,22 @@ jobs:
           # The favicon is generated. This fails if the page carries a hand-
           # edited icon, or one produced by an older version of the generator —
           # which is the only way an asset built from code stays built from it.
-          scripts/make-favicon.py --check
+          scripts/make-sprites.py --check
+
+      # Fetched at build time rather than by the page: the CSP says
+      # `default-src 'none'` and that is worth more than freshness measured in
+      # seconds. A failure here stops the deploy, which leaves the previous
+      # page up — and it was true when it was made.
+      - name: Render the changelog into the status section
+        run: scripts/sync-changelog.py --write
+
+      # Re-run after the injection, because the thing that was checked above
+      # is no longer the thing about to be published.
+      - name: Re-check the assembled page
+        run: |
+          set -euo pipefail
+          scripts/check-site.py --root site --built site --base-path "" --external-prefix /dedalo/
+          scripts/check-contrast.py --quiet
 
       - name: Assemble
         run: |
