@@ -35,6 +35,16 @@ jobs:
           # resolved here.
           scripts/check-site.py --root site --built site --base-path "" --external-prefix /dedalo/
 
+          # Every colour against the background it sits on. A palette is easy
+          # to admire and hard to read, and "the dim grey is fine" should be a
+          # number rather than an opinion.
+          scripts/check-contrast.py --quiet
+
+          # The favicon is generated. This fails if the page carries a hand-
+          # edited icon, or one produced by an older version of the generator —
+          # which is the only way an asset built from code stays built from it.
+          scripts/make-favicon.py --check
+
       - name: Assemble
         run: |
           set -euo pipefail
