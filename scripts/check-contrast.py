@@ -38,6 +38,14 @@ COMPONENT_MINIMUM = 3.0
 # omission. Anything not in this set is held to a threshold.
 DECORATIVE = {"line"}
 
+# Graphical objects rather than text: the three arcs of the round diagram.
+# WCAG 1.4.11 asks 3:1 of these, not the 4.5:1 it asks of text, and holding a
+# chart segment to a text threshold on a light background leaves so little
+# luminance range that the segments stop being distinguishable from *each
+# other* — which is the failure that actually matters here, and is reported
+# separately below.
+GRAPHICAL = {"ring-a", "ring-b", "ring-c"}
+
 # Tokens that are backgrounds or sit on an accent rather than on the page.
 NOT_FOREGROUND = {"bg", "bg-alt", "bg-raised", "on-accent"}
 
@@ -105,7 +113,8 @@ def main() -> int:
                     print(f"  ---  {name:<10} {colour}  decorative, exempt by name")
                 continue
 
-            needed = COMPONENT_MINIMUM if name.startswith("line") else TEXT_MINIMUM
+            graphical = name.startswith("line") or name in GRAPHICAL
+            needed = COMPONENT_MINIMUM if graphical else TEXT_MINIMUM
             ratio = contrast(colour, background)
             passed = ratio >= needed
             failures += not passed
@@ -117,6 +126,21 @@ def main() -> int:
                 )
             elif not args.quiet:
                 print(f"  ok   {name:<10} {colour}  {ratio:5.2f}:1  (needs {needed})")
+
+        # How well the slices of the round separate from *each other*. A pie
+        # read by hue alone fails for anyone with a colour vision deficiency,
+        # and on this page's light background the three were 1.03:1 to 1.08:1
+        # apart — indistinguishable. The luminance range above threshold is too
+        # narrow to fix by choosing better colours, so the fix is the gap the
+        # stylesheet now draws between segments, and these numbers are printed
+        # rather than enforced so nobody mistakes the colours for the solution.
+        slices = {n: c for n, c in tokens.items() if n in GRAPHICAL}
+        if slices and not args.quiet:
+            names = sorted(slices)
+            print("       slices, against each other — the gap is what separates them:")
+            for i, a in enumerate(names):
+                for b in names[i + 1 :]:
+                    print(f"       {a} / {b}  {contrast(slices[a], slices[b]):5.2f}:1")
 
     measured = sum(
         1 for t in themes.values() for n in t if n not in NOT_FOREGROUND and n not in DECORATIVE

@@ -9,14 +9,13 @@
 <meta property="og:description" content="Turn code merges into sustainable open-source funding.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dedalo-org.github.io/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cstyle%3Epath%2Crect%7Bstroke%3A%2314170f%3Bfill%3Anone%3Bstroke-width%3A3.6%3Bstroke-linecap%3Asquare%7Drect%7Bfill%3A%2314170f%3Bstroke%3Anone%7D%40media%28prefers-color-scheme%3Adark%29%7Bpath%7Bstroke%3A%237dff9b%7Drect%7Bfill%3A%237dff9b%7D%7D%3C%2Fstyle%3E%3Cpath%20d%3D%22M18.20%202.40H29.60V29.60H2.40V2.40H13.80%22%2F%3E%3Cpath%20d%3D%22M18.20%2021.73H21.73V10.27H10.27V21.73H13.80%22%2F%3E%3Crect%20x%3D%2214.20%22%20y%3D%2214.20%22%20width%3D%223.60%22%20height%3D%223.60%22%2F%3E%3C%2Fsvg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%A7%BF%3C%2Ftext%3E%3C%2Fsvg%3E">
 <!-- The page is entirely self-contained: no scripts, no external requests.
      Every moving part below is CSS or SVG. Saying so explicitly means a
      future edit that adds a script fails loudly instead of quietly. -->
 <meta http-equiv="Content-Security-Policy"
       content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; form-action 'none'; base-uri 'none'; frame-ancestors 'none'">
-<meta name="theme-color" content="#0a0c0a" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#f4f3ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0c0a">
 <link rel="canonical" href="https://dedalo-org.github.io/">
 <style>
   /* ===================================================================
@@ -30,8 +29,18 @@
      a decorative hairline between sections and is deliberately below that —
      WCAG 1.4.11 covers components that carry information, and a divider does
      not. `scripts/check-contrast.py` re-measures all of it. */
+  /* Two themes, and night is the default — not "whatever this machine
+     decided". Every value was measured against its own background with the
+     WCAG relative-luminance formula rather than chosen by eye; text clears
+     4.5:1, `--line-hot` and the ring slices clear 3:1 as graphical objects,
+     and `--line` is a decorative hairline exempted by name.
+     `scripts/check-contrast.py` re-measures all of it and runs in CI.
+
+     There is no JavaScript here and there is not going to be: the CSP says
+     `default-src 'none'`, so the switch is one checkbox and `:has()` — a
+     selector of specificity (1,0,1), which beats `:root`. */
   :root {
-    color-scheme: dark light;
+    color-scheme: dark;
 
     --bg:        #0a0c0a;
     --bg-alt:    #0f120e;
@@ -49,40 +58,20 @@
     --rose:      #ff9fb4;
     --on-accent: #06120a;
 
+    /* The three slices of a round. Separate tokens from the accents, because
+       these are read *against each other* and the accents are read against
+       the page. */
+    --ring-a:    #7dff9b;
+    --ring-b:    #79b8f2;
+    --ring-c:    #ffcb6b;
+
     --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", "Cascadia Mono", Menlo, Consolas, monospace;
     --gap: clamp(2.5rem, 6vw, 4.5rem);
   }
 
-  /* The three theme states, in the order they must override each other.
-
-     There is no JavaScript here and there is not going to be: the page's CSP
-     says `default-src 'none'`, and a script would fail loudly rather than
-     quietly. So the switch is three radio buttons and `:has()` — a selector
-     of specificity (1,0,1), which beats both `:root` and anything a media
-     query can say, in either direction. */
-  @media (prefers-color-scheme: light) {
-    :root { --bg: #f4f3ec; }
-    :root:not(:has(#theme-dark:checked)) {
-      --bg:        #f4f3ec;
-      --bg-alt:    #eceadf;
-      --bg-raised: #ffffff;
-      --line:      #dcdacc;
-      --line-hot:  #8f8b78;
-
-      --fg:        #12150e;
-      --fg-dim:    #4e5844;
-      --fg-faint:  #67715c;
-
-      --green:     #0e6b3a;
-      --amber:     #7d5205;
-      --cyan:      #0b6076;
-      --rose:      #a52c52;
-      --on-accent: #ffffff;
-    }
-  }
-
-  html:has(#theme-light:checked) {
+  html:has(#theme-day:checked) {
     color-scheme: light;
+
     --bg:        #f4f3ec;
     --bg-alt:    #eceadf;
     --bg-raised: #ffffff;
@@ -98,25 +87,10 @@
     --cyan:      #0b6076;
     --rose:      #a52c52;
     --on-accent: #ffffff;
-  }
 
-  html:has(#theme-dark:checked) {
-    color-scheme: dark;
-    --bg:        #0a0c0a;
-    --bg-alt:    #0f120e;
-    --bg-raised: #141810;
-    --line:      #232c1e;
-    --line-hot:  #4e6642;
-
-    --fg:        #dbe6d0;
-    --fg-dim:    #93a385;
-    --fg-faint:  #727f66;
-
-    --green:     #7dff9b;
-    --amber:     #ffcb6b;
-    --cyan:      #79dcf2;
-    --rose:      #ff9fb4;
-    --on-accent: #06120a;
+    --ring-a:    #0b4a28;
+    --ring-b:    #1f5f96;
+    --ring-c:    #a06a12;
   }
 
   * { box-sizing: border-box; }
@@ -160,48 +134,62 @@
     white-space: nowrap;
   }
 
-  .theme {
-    display: flex;
-    gap: 0;
-    margin: 0 0 0 auto;
-    padding: 0;
-    border: 1px solid var(--line-hot);
-    background: var(--bg-alt);
-  }
+  /* ---- changelog ------------------------------------------------------
+     Rendered from dedalo's CHANGELOG.md. Deliberately capped: a changelog
+     grows without limit and a landing page does not. */
+  .cl-title { font-size: 1rem; margin: 2rem 0 0.35rem; }
 
-  /* The radios stay in the tab order and stay focusable — they are simply
-     drawn by their labels. `appearance:none` with zero size, rather than
-     `display:none`, which would make the control unreachable by keyboard. */
-  .theme input {
+  .changelog { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: 1.5rem; counter-reset: none; }
+  .changelog > li { border-left: 2px solid var(--line-hot); padding-left: 1rem; }
+  .changelog h3 { display: flex; gap: 0.75rem; align-items: baseline; flex-wrap: wrap; margin: 0 0 0.6rem; font-size: 0.95rem; }
+  .cl-version { color: var(--green); font-weight: 700; }
+  .cl-date { color: var(--fg-faint); font-size: 0.78rem; letter-spacing: 0.06em; }
+  .changelog ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+  .changelog ul li { color: var(--fg-dim); font-size: 0.86rem; line-height: 1.6; padding-left: 1rem; position: relative; }
+  .changelog ul li::before { content: "·"; position: absolute; left: 0; color: var(--line-hot); }
+  .changelog code { color: var(--fg); background: var(--bg-alt); padding: 0 0.25em; }
+  .changelog b { color: var(--fg); font-weight: 700; }
+  .cl-more { color: var(--fg-faint) !important; font-style: italic; }
+
+  /* The theme control: pixel art, fixed, and reachable by keyboard.
+
+     `appearance:none` with a one-pixel box rather than `display:none`, which
+     would take the checkbox out of the tab order and out of the accessibility
+     tree — a control nobody can reach is not a control. */
+  .theme-input {
     appearance: none;
-    position: absolute;
+    position: fixed;
     width: 1px; height: 1px;
     margin: 0;
     opacity: 0;
   }
 
-  .theme label {
-    padding: 0.18rem 0.5rem;
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    color: var(--fg-dim);
+  .theme-toggle {
+    position: fixed;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 20;
+    display: grid;
+    place-items: center;
+    width: 3rem; height: 3rem;
+    background: var(--bg-alt);
+    border: 1px solid var(--line-hot);
     cursor: pointer;
-    border-right: 1px solid var(--line);
-    user-select: none;
+    transition: border-color 0.15s, background 0.15s;
   }
-  .theme label:last-of-type { border-right: 0; }
-  .theme label:hover { color: var(--fg); }
+  .theme-toggle:hover { border-color: var(--fg-dim); background: var(--bg-raised); }
+  .theme-toggle svg { width: 1.6rem; height: 1.6rem; display: block; }
 
-  .theme input:checked + label {
-    background: var(--green);
-    color: var(--on-accent);
-  }
+  /* Show the mode you would get, not the one you are in: a control that
+     depicts the present state reads as a status light rather than a switch. */
+  .sprite-sun  { fill: var(--amber); }
+  .sprite-moon { fill: var(--cyan); display: none; }
+  html:has(#theme-day:checked) .sprite-sun  { display: none; }
+  html:has(#theme-day:checked) .sprite-moon { display: block; }
 
-  /* Focus follows the radio, but the radio is invisible — so the ring is
-     drawn on the label that stands in for it. */
-  .theme input:focus-visible + label {
+  .theme-input:focus-visible + .theme-toggle {
     outline: 2px solid var(--cyan);
-    outline-offset: -2px;
+    outline-offset: 2px;
   }
 
   /* Anything that moves for more than five seconds needs a way out, and the
@@ -434,10 +422,19 @@
      The final proportions live in the rule, not in the animation's `to`, so
      the ring is correct before the animation starts, after it ends, when it
      is switched off, and in a screenshot taken mid-load. The keyframe only
-     says where it comes from. */
-  .seg-contrib  { stroke: var(--green); stroke-dasharray: 362.85 439.82; animation: draw 1.4s cubic-bezier(.2,.7,.3,1); }
-  .seg-treasury { stroke: var(--cyan);  stroke-dasharray: 65.97 439.82;  animation: draw 1.4s cubic-bezier(.2,.7,.3,1) 0.18s backwards; }
-  .seg-protocol { stroke: var(--amber); stroke-dasharray: 11 439.82;     animation: draw 1.4s cubic-bezier(.2,.7,.3,1) 0.36s backwards; }
+     says where it comes from.
+
+     Each arc is three units short of its true share, which opens a gap at
+     every boundary. That is not decoration: measured against each other, the
+     three light-theme colours differ by 1.03:1 to 1.08:1, so on a light
+     background the segments were told apart by hue alone — which fails for
+     anyone with a colour vision deficiency, and very nearly failed for
+     everyone. The luminance range available above 4.5:1 on this background is
+     too narrow to fix by choosing better colours, so the boundary is drawn
+     instead of implied. */
+  .seg-contrib  { stroke: var(--ring-a); stroke-dasharray: 359.85 439.82; animation: draw 1.4s cubic-bezier(.2,.7,.3,1); }
+  .seg-treasury { stroke: var(--ring-b); stroke-dasharray: 62.97 439.82;  animation: draw 1.4s cubic-bezier(.2,.7,.3,1) 0.18s backwards; }
+  .seg-protocol { stroke: var(--ring-c); stroke-dasharray: 8 439.82;      animation: draw 1.4s cubic-bezier(.2,.7,.3,1) 0.36s backwards; }
   @keyframes draw { from { stroke-dasharray: 0 439.82; } }
 
   .ring-scan {
@@ -453,9 +450,9 @@
   .legend span { width: 10px; height: 10px; display: block; align-self: center; }
   .legend b { color: var(--fg); font-weight: 700; }
   .legend em { font-style: normal; color: var(--fg-dim); }
-  .sw-contrib { background: var(--green); }
-  .sw-treasury { background: var(--cyan); }
-  .sw-protocol { background: var(--amber); }
+  .sw-contrib { background: var(--ring-a); }
+  .sw-treasury { background: var(--ring-b); }
+  .sw-protocol { background: var(--ring-c); }
 
   /* ---- card grids ---------------------------------------------------- */
   .grid {
@@ -512,6 +509,18 @@
 
 <a class="skip" href="#main">Skip to content</a>
 
+<!-- Sits outside <main> because it belongs to the page rather than to its
+     content, and stays put while the page scrolls. Two states, and night is
+     the default: this is a terminal-shaped page and it should open like one. -->
+<input type="checkbox" id="theme-day" class="theme-input">
+<label class="theme-toggle" for="theme-day" title="Switch theme">
+  <svg viewBox="0 0 15 15" aria-hidden="true">
+    <path class="sprite-sun" d="M7 1h1v1h-1zM7 2h1v1h-1zM3 3h1v1h-1zM11 3h1v1h-1zM6 4h3v1h-3zM5 5h5v1h-5zM4 6h7v1h-7zM1 7h2v1h-2zM4 7h7v1h-7zM12 7h2v1h-2zM4 8h7v1h-7zM5 9h5v1h-5zM6 10h3v1h-3zM3 11h1v1h-1zM11 11h1v1h-1zM7 12h1v1h-1zM7 13h1v1h-1z"/>
+    <path class="sprite-moon" d="M5 1h3v1h-3zM4 2h3v1h-3zM3 3h4v1h-4zM2 4h4v1h-4zM1 5h5v1h-5zM1 6h5v1h-5zM1 7h5v1h-5zM1 8h5v1h-5zM1 9h6v1h-6zM2 10h6v1h-6zM3 11h6v1h-6zM4 12h7v1h-7zM5 13h5v1h-5z"/>
+  </svg>
+  <span class="sr-only">Switch between the night and day theme</span>
+</label>
+
 <div class="ticker" aria-hidden="true">
   <div class="track">
     <i class="hi">● system status: pre-release</i><i class="warn">on-chain broadcast: not live</i><i>dedalo holds no signing key</i><i>ledger: hash-chained</i><i class="hi">vault: a test per refusal</i><i>money: integers only</i><i>msrv 1.90.0 verified</i><i>licence mit</i>
@@ -542,20 +551,6 @@
     <a href="/dedalo/">handbook</a>
     <a href="https://github.com/dedalo-org/dedalo">source</a>
 
-    <!-- Three radios rather than a toggle, because the honest default is not
-         a third colour scheme but "whatever this machine already decided".
-         Radios are keyboard-operable and announced as a group for free; a
-         `div` with a click handler would be neither, and there is no
-         JavaScript here to give it one. -->
-    <fieldset class="theme">
-      <legend class="sr-only">Colour theme</legend>
-      <input type="radio" name="theme" id="theme-system" checked>
-      <label for="theme-system" title="Follow this device">auto</label>
-      <input type="radio" name="theme" id="theme-light">
-      <label for="theme-light" title="Always light">day</label>
-      <input type="radio" name="theme" id="theme-dark">
-      <label for="theme-dark" title="Always dark">night</label>
-    </fieldset>
   </nav>
 </header>
 
@@ -567,7 +562,7 @@
     <p class="lede">
       Dedalo reads the changes that landed in your repository, scores who
       contributed what, and distributes a funding round to contributor wallets —
-      taking a protocol fee that flows to the network's Open Collective, so
+      taking a protocol fee that funds the network itself, so
       <b>the network funds itself</b> instead of depending on grants.
     </p>
     <div class="cta">
@@ -591,7 +586,7 @@ demo-collective  <span class="g">protocol</span>     0x33333333333…   2.50%   
 
   contributors               825 USDC
   treasury                   150 USDC
-  protocol fee                25 USDC  <span class="c">→ open collective</span>
+  protocol fee                25 USDC  <span class="c">→ the network</span>
 
 <span class="w">warning:</span> 1 contributor earned a share but has no wallet:
   Cy &lt;cy@example.com&gt;  140 points
@@ -672,7 +667,7 @@ demo-collective  <span class="g">protocol</span>     0x33333333333…   2.50%   
 
     <div class="split-grid">
       <svg class="ring" viewBox="0 0 200 200" role="img"
-           aria-label="82.5 percent to contributors, 15 percent to the project treasury, 2.5 percent protocol fee to the network's Open Collective.">
+           aria-label="82.5 percent to contributors, 15 percent to the project treasury, 2.5 percent protocol fee to the network. The three arcs are separated by a gap, because on a light background they are not far enough apart in luminance to be told apart by colour alone.">
         <circle class="ring-track" cx="100" cy="100" r="70"/>
         <circle class="ring-scan"  cx="100" cy="100" r="86"/>
         <!-- Arcs at r=70: circumference 439.82. Offsets place each segment
@@ -687,7 +682,7 @@ demo-collective  <span class="g">protocol</span>     0x33333333333…   2.50%   
       <ul class="legend">
         <li><span class="sw-contrib"></span><b>82.50%</b><em>contributors, by attribution weight — and any rounding dust lands here</em></li>
         <li><span class="sw-treasury"></span><b>15.00%</b><em>your project's own reserve, growing with its activity</em></li>
-        <li><span class="sw-protocol"></span><b>2.50%</b><em>protocol fee to the network's Open Collective — how the network funds itself</em></li>
+        <li><span class="sw-protocol"></span><b>2.50%</b><em>protocol fee to the network — how the network funds itself</em></li>
       </ul>
     </div>
   </section>
@@ -858,16 +853,40 @@ dedalo = { version = "0.1",
         has moved a coin.
       </p>
     </div>
-    <ul class="check">
-      <li class="done">git-derived attribution with co-author support</li>
-      <li class="done">deterministic, content-addressed payout plans</li>
-      <li class="done">fee schedule with protocol / treasury / contributor split</li>
-      <li class="done">append-only ledger with idempotent rounds</li>
-      <li class="done">github action and provenance-signed releases</li>
-      <li class="done">merkle claim tree, verified byte-for-byte against the contract</li>
-      <li class="todo">audited claim contract, deployed, with a testnet round settled</li>
-      <li class="todo">review-weighted attribution — reviewers earn too</li>
-    </ul>
+    <h3 class="cl-title">What has actually shipped</h3>
+    <p class="sub">
+      Generated from the project&rsquo;s changelog at build time, and rebuilt on
+      a schedule — so this is what the repository says, not what somebody
+      remembered to update here.
+    </p>
+    <!-- changelog:start -->
+    <!-- Generated by scripts/sync-changelog.py from the changelog in
+         dedalo-org/dedalo. Do not edit between the markers: the next
+         build will overwrite it. -->
+    <ol class="changelog">
+      <li>
+        <h3><span class="cl-version">Unreleased</span><span class="cl-date">not released</span></h3>
+        <ul>
+          <li><b>core</b>: the git → attribution → payout plan → settlement pipeline, with the first three stages pure and offline so a plan is reproducible from history.</li>
+          <li><b>core</b>: integer-only money (<code>Amount</code>), largest-remainder splitting that conserves every base unit, and a fee schedule in basis points that rounds down in the contributors&#x27; favour.</li>
+          <li><b>core</b>: content-addressed payout plans, an append-only ledger, and refusal to settle the same plan twice.</li>
+          <li><b>cli</b>: <code>dedalo init</code>, <code>scan</code>, <code>contributors</code>, <code>plan</code>, <code>settle</code>, <code>status</code>, <code>identity</code> and <code>ledger</code>, each with <code>--json</code>.</li>
+          <li><b>infrastructure</b>: one toolchain pinned in <code>rust-toolchain.toml</code> for contributors and CI, with the declared MSRV verified rather than asserted.</li>
+          <li>On-chain broadcasting is not live. The <code>evm</code> backend validates its configuration, re-verifies the plan and builds the distributor call, then returns <code>NotImplemented</code> rather than signing through an unaudited path.</li>
+        </ul>
+      </li>
+      <li>
+        <h3><span class="cl-version">0.0.0</span><span class="cl-date">2026-08-25</span></h3>
+        <ul>
+          <li><b>crate</b>: a placeholder published to crates.io so that <code>dedalo</code> could not be taken while the tool was being built. It had no library surface and no dependencies; the binary answered <code>--version</code> and otherwise printed where the code was.</li>
+          <li>Nothing in it computed, moved or recorded money.</li>
+          <li>Publishing an empty version rather than the work in progress was deliberate. A version can be yanked but never withdrawn, so the first number that carries code should be one somebody can rely on. That number is <code>0.0.1</code>.</li>
+          <li>It was cut from a branch that no longer exists. For six days <code>main</code> held the placeholder and the code lived on <code>v0.1</code>; the arrangement cost more than it bought — <code>Closes #N</code> never fired, <code>cargo install --git</code> installed a binary with no subcommands — and the code came back to <code>main</code>.</li>
+        </ul>
+      </li>
+    </ol>
+    <p class="sub"><a href="https://github.com/dedalo-org/dedalo/blob/main/CHANGELOG.md">The full changelog</a> is in the repository, and this is generated from it.</p>
+    <!-- changelog:end -->
   </section>
 
   <section id="projects" class="wrap" aria-labelledby="p-title">
@@ -918,13 +937,14 @@ from the same history a payout comes from.
     <h2 style="margin-top:2.5rem">Or fund it</h2>
     <p class="sub">
       A project whose subject is transparent funding should be transparently
-      funded. The collective's ledger is public, so where the money went is a
+      funded, so the collective's ledger is public — where the money went is a
       page you can read rather than a claim.
     </p>
     <p class="sub">
-      It is also where the <b>protocol fee</b> is designed to flow: every round
-      a project settles routes 2.5% here, which is what &ldquo;the network funds
-      itself&rdquo; means. Nothing flows there yet — settlement is not live.
+      Sponsoring is all it is. Dedalo does not integrate with Open Collective
+      and is not going to: what it is built on is git, Solana, Rust and formal
+      verification, and a fifth dependency that has to be true about a
+      contributor's project would be a fifth thing to keep true.
     </p>
     <div class="cta">
       <a class="btn primary" href="https://opencollective.com/dedalo">open collective</a>
@@ -950,7 +970,7 @@ from the same history a payout comes from.
     <a href="https://github.com/orgs/dedalo-org/discussions">discussions</a>
     <a href="https://opencollective.com/dedalo">open collective</a>
     <a href="https://github.com/dedalo-org/dedalo/blob/main/CHANGELOG.md">changelog</a>
-    <span class="sep">built with rust 🦀</span>
+
   </div>
 </footer>
 
