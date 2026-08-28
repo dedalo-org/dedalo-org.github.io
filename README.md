@@ -26,6 +26,39 @@ tree — a typo inside one is still caught, but the files are not here to check.
 Only the `robots.txt` at the domain root is ever fetched, so this one names
 both sitemaps.
 
+## One convention for diagrams
+
+The page had ASCII diagrams drawn with box-drawing characters inside `<pre>`.
+A screen reader reads those literally — `─ ─ ─ ▶` and so on — which is a
+hundred characters of noise where a sentence should be. They are gone; the
+pipeline, the split and the funding ladder are SVG.
+
+The rule, so the page does not end up with two conventions:
+
+**A picture gets `role="img"` and an `aria-label` that carries the whole
+content.** One announcement instead of a hundred characters. The label says
+what the diagram *shows*, in order, and never describes the drawing — "82.5
+percent to contributors, 15 percent to the project treasury, 2.5 percent
+protocol fee to the network", not "a doughnut chart with three arcs".
+
+`aria-hidden` plus a separate text equivalent was the alternative. It was not
+taken: it makes the diagram decoration for sighted readers only, and the
+equivalent drifts because nothing ties it to the picture.
+
+**Text stays text.** A terminal transcript, an install command and a list of
+links are content, not pictures, and hiding them behind a label would take
+away something a screen reader user can otherwise read line by line. They get
+a `<figcaption class="sr-only">` that says what the block shows *before* the
+literal characters, so the columns arrive with context rather than instead of
+it.
+
+**Decoration is `aria-hidden="true"`.** The window-chrome dots, the theme
+toggle's icon, and the scrolling tickers. The tickers are the case worth
+naming: they are announced by nothing, and every fact in them — the
+pre-release status, that on-chain broadcast is not live, that Dedalo holds no
+signing key — is stated in readable prose further down the page. Hiding a
+duplicate is fine; hiding the only copy of something would not be.
+
 ## Working on it
 
 ```sh
