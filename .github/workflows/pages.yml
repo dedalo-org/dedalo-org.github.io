@@ -50,6 +50,11 @@ jobs:
           # which is the only way an asset built from code stays built from it.
           scripts/make-sprites.py --check
 
+          # The OpenGraph card, same rule: generated from code, checked here,
+          # and rasterised at assembly time. A stale og.svg means the card a
+          # crawler fetches is not the one this script describes.
+          scripts/make-og-image.py --check
+
       # Fetched at build time rather than by the page: the CSP says
       # `default-src 'none'` and that is worth more than freshness measured in
       # seconds. A failure here stops the deploy, which leaves the previous
@@ -65,6 +70,17 @@ jobs:
           scripts/check-site.py --root site --built site --base-path "" --external-prefix /dedalo/
           scripts/check-contrast.py --quiet
 
+      # Most crawlers do not render SVG for OpenGraph, so the card has to be a
+      # PNG. It is produced here rather than committed: a PNG in the repository
+      # is a binary blob nobody can review, and regenerating it means finding
+      # whatever produced it. What lives in git is site/og.svg, which is text.
+      #
+      # librsvg rather than a Rust rasteriser because it is one apt line and no
+      # compile, and the card needs no font: every glyph is a `<path>` produced
+      # by make-og-image.py, so the output does not depend on what is installed.
+      - name: Install the rasteriser
+        run: sudo apt-get update && sudo apt-get install -y librsvg2-bin
+
       - name: Assemble
         run: |
           set -euo pipefail
@@ -72,10 +88,25 @@ jobs:
           cp -r site/. _site/
           # Pages must not run Jekyll over the tree.
           touch _site/.nojekyll
+
+          rsvg-convert -w 1200 -h 630 site/og.svg -o _site/og.png
+          # The SVG source is not published: what the meta tags name is the
+          # PNG, and shipping both invites somebody to link the wrong one.
+          rm -f _site/og.svg
+
           test -f _site/index.html
           test -f _site/404.html
           test -f _site/robots.txt
           test -f _site/sitemap.xml
+          test -s _site/og.png
+          # 1200x630, or a crawler crops it. Read from the file rather than
+          # trusted, because the whole point of generating it is that nobody
+          # checks it by eye.
+          file _site/og.png | grep -q '1200 x 630' || {
+            echo "::error title=Wrong card size::og.png is not 1200x630"
+            file _site/og.png
+            exit 1
+          }
 
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
