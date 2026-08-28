@@ -571,8 +571,16 @@
       <a class="btn" href="https://github.com/dedalo-org/dedalo">source</a>
     </div>
 
-    <figure class="panel term" role="group" aria-label="Example output of dedalo plan">
-      <div class="panel-bar"><span class="led on"></span><span class="led"></span><span class="led"></span>&nbsp;dedalo plan --amount 1000</div>
+    <figure class="panel term">
+      <figcaption class="sr-only">
+        Example output of <code>dedalo plan --amount 1000</code>. A round of
+        1000 USDC over two merges: two contributors receive 412.5 USDC each,
+        the project treasury 150, and the network's protocol fee 25. A third
+        contributor earned a share and has no wallet on file, so the tool warns
+        and says how to link them. The table below repeats these numbers column
+        by column.
+      </figcaption>
+      <div class="panel-bar"><span class="led on" aria-hidden="true"></span><span class="led" aria-hidden="true"></span><span class="led" aria-hidden="true"></span>&nbsp;dedalo plan --amount 1000</div>
 <pre><span class="c">$</span> dedalo plan --amount 1000
 
 <span class="p">Round</span> ded106bd7281  <span class="c">2 merges on main → af3141b5</span>
@@ -770,12 +778,12 @@ demo-collective  <span class="g">protocol</span>     0x33333333333…   2.50%   
     </p>
     <div class="tabs">
       <div class="panel">
-        <div class="panel-bar"><span class="led on"></span>&nbsp;script</div>
+        <div class="panel-bar"><span class="led on" aria-hidden="true"></span>&nbsp;script</div>
 <pre>curl -fsSL https://raw.githubusercontent.com/\
 dedalo-org/dedalo/main/install.sh | sh</pre>
       </div>
       <div class="panel">
-        <div class="panel-bar"><span class="led on"></span>&nbsp;cargo</div>
+        <div class="panel-bar"><span class="led on" aria-hidden="true"></span>&nbsp;cargo</div>
 <pre>cargo install dedalo --locked
 <span class="c"># or, without compiling:</span>
 cargo binstall dedalo</pre>
@@ -785,7 +793,7 @@ cargo binstall dedalo</pre>
     <h2 style="margin-top:2.5rem">Or run it in CI</h2>
     <p class="sub">A payout belongs in the pipeline that merged the code.</p>
     <div class="panel">
-      <div class="panel-bar"><span class="led on"></span>&nbsp;.github/workflows/payouts.yml</div>
+      <div class="panel-bar"><span class="led on" aria-hidden="true"></span>&nbsp;.github/workflows/payouts.yml</div>
 <pre>- uses: actions/checkout@v5
   with:
     fetch-depth: 0        <span class="c"># attribution needs the full history</span>
@@ -807,7 +815,7 @@ cargo binstall dedalo</pre>
     </p>
     <div class="tabs">
       <div class="panel">
-        <div class="panel-bar"><span class="led on"></span>&nbsp;handbook</div>
+        <div class="panel-bar"><span class="led on" aria-hidden="true"></span>&nbsp;handbook</div>
 <pre><a href="/dedalo/getting-started/quickstart.html">quickstart</a>          <span class="c">a round in ten minutes</span>
 <a href="/dedalo/concepts/money.html">money</a>              <span class="c">integers, and what is proved</span>
 <a href="/dedalo/reference/configuration.html">dedalo.toml</a>        <span class="c">every key, every default</span>
@@ -816,7 +824,7 @@ cargo binstall dedalo</pre>
 <a href="/dedalo/operating/auditing.html">auditing</a>           <span class="c">check a project yourself</span></pre>
       </div>
       <div class="panel">
-        <div class="panel-bar"><span class="led on"></span>&nbsp;api reference</div>
+        <div class="panel-bar"><span class="led on" aria-hidden="true"></span>&nbsp;api reference</div>
 <pre><span class="c"># signatures and types, per release</span>
 <a href="https://docs.rs/dedalo">docs.rs/dedalo</a>
 
@@ -897,7 +905,7 @@ dedalo = { version = "0.1",
     </p>
     <div class="tabs">
       <div class="panel">
-        <div class="panel-bar"><span class="led on"></span>&nbsp;dedalo</div>
+        <div class="panel-bar"><span class="led on" aria-hidden="true"></span>&nbsp;dedalo</div>
 <pre>The protocol: attribution, payout plans,
 the hash-chained ledger, the claim contract,
 and the CLI and GitHub Action that drive them.
@@ -905,7 +913,7 @@ and the CLI and GitHub Action that drive them.
 <span class="c">rust · <a href="/dedalo/">handbook</a> · <a href="https://docs.rs/dedalo">api</a> · <a href="https://github.com/dedalo-org/dedalo">source</a></span></pre>
       </div>
       <div class="panel">
-        <div class="panel-bar"><span class="led"></span>&nbsp;dedalo-nvim</div>
+        <div class="panel-bar"><span class="led" aria-hidden="true"></span>&nbsp;dedalo-nvim</div>
 <pre>Attribution where the code is. Shows who
 earns from the lines in front of you, read
 from the same history a payout comes from.
